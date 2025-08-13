@@ -8,7 +8,7 @@
 
 ## Sobre o Projeto
 
-O **Teste Prático Iniflex** é uma aplicação Spring Boot desenvolvida para o desafio técnico da **Viasoft**.  
+O **Teste Prático Iniflex** é uma aplicação Spring Boot desenvolvida para o desafio técnico.  
 A aplicação gerencia uma lista de funcionários em um banco de dados em memória **H2**, executando diversas operações de negócio a partir de endpoints REST.
 
 O projeto segue **arquitetura em camadas** (Controller, Service, Repository), utiliza **Spring Data JPA** e está pronto para ser executado localmente.
@@ -20,6 +20,8 @@ O projeto segue **arquitetura em camadas** (Controller, Service, Repository), ut
 - ✅ **Persistência de dados** com H2 Database.
 - ✅ **Remoção** de funcionários por nome.
 - ✅ **Aumento automático** de salários em 10%.
+- ✅ **Documentacao de Api** com Swagger.
+- ✅ **Teste Unitários e de Integração** com JUnit e Mockito.
 - ✅ **Agrupamento** de funcionários por função.
 - ✅ **Relatórios detalhados** (aniversariantes, mais velho, total de salários, salários em salários mínimos, etc.).
 - ✅ **Arquitetura organizada** seguindo boas práticas.

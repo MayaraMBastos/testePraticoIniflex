@@ -65,14 +65,14 @@ Certifique-se de ter instalado:
 - **Maven 3.6+**
 - **Git** (para clonar o repositório)
 
-### Clonando o Repositório
+### Passo 1 - Clonando o Repositório
 
 ```bash
 git clone https://github.com/MayaraMBastos/testePraticoIniflex
 cd teste_pratico_iniflex
 ```
 
-### Opção 1: Executar com Maven
+### Passo 2 - Opção 1: Executar com Maven
 
 ```bash
 mvn spring-boot:run
@@ -87,22 +87,43 @@ mvn clean package
 # Executar
 java -jar target/teste_pratico_iniflex-0.0.1-SNAPSHOT.jar
 ```
+### Passo 3 - Executar com Swagger ou direto no navegador
+```bash
+#Executar com swagger
+http://localhost:8080/swagger-ui.html
 
+ou
+
+#Executor pelo endpoint
+http://localhost:8080/api/funcionarios/executar-teste
+
+```
 ---
 
-## 📖 Documentação da API
+## 📚 Documentação da API
 
+### Endpoints da API REST (`/api/funcionarios`)
+
+A aplicação oferece endpoints RESTful para interagir com os dados de forma granular.
+
+#### Documentação com Swagger
+A documentação interativa da API, gerada automaticamente com o Springdoc OpenAPI, está disponível nos seguintes endpoints:
+
+-   **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+-   **OpenAPI JSON**: `http://localhost:8080/v3/api-docs`
+
+Com o **Swagger UI**, você pode visualizar todos os endpoints, ler suas descrições, e até mesmo testar as requisições diretamente do seu navegador.
 ### Endpoint de Teste Completo
 
 Executa toda a lógica de negócio do desafio em uma única requisição.
 
 - **Método:** GET
-- **URL:** `http://localhost:8080/teste/executar-teste`
+- **URL:** `http://localhost:8080/api/funcionarios/executar-teste`
 
 #### Exemplo de requisição:
 
 ```bash
-curl http://localhost:8080/teste/executar-teste
+curl http://localhost:8080/api/funcionarios/executar-teste
 ```
 
 #### Resposta (exemplo):

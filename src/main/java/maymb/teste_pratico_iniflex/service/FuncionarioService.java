@@ -40,7 +40,7 @@ public class FuncionarioService {
         );
     }
 
-    // Método para inserir dados iniciais, chamado na inicialização
+    // Metodo para inserir dados iniciais, chamado no endpoint executar-teste
     public void inserirFuncionariosIniciais() {
         if (funcionarioRepository.count() == 0) {
             funcionarioRepository.saveAll(List.of(
@@ -58,7 +58,7 @@ public class FuncionarioService {
         }
     }
 
-    // Remover o funcionario “João”
+    // Remover o funcionario por nome
     public void removerFuncionario(String nome) {
         Optional<Funcionario> funcionario = funcionarioRepository.findByNome(nome);
         funcionario.ifPresent(funcionarioRepository::delete);

@@ -39,50 +39,55 @@ public class FuncionarioController {
     }
 
     // Endpoint principal que executa todas as acoes do teste
-    @GetMapping("/executar-teste")
+    @GetMapping(value = "/executar-teste", produces = "text/plain")
     public String executarTesteCompleto() {
         StringBuilder sb = new StringBuilder();
 
-        // Inserir todos os funcionarios
+        sb.append("<pre>");
+
+        // 3.1 – Inserir todos os funcionarios
         funcionarioService.inserirFuncionariosIniciais();
 
-        // Remover funcionário Joao
+        // 3.2 - Remover funcionrio "João"
         funcionarioService.removerFuncionario("João");
         sb.append("--- Funcionário 'João' Removido ---\n\n");
 
-        // Imprimir todos os funcionários
+        // 3.3 - Imprimir todos os funcionarios
         sb.append("--- Lista de Funcionários ---\n");
         sb.append(funcionarioService.imprimirTodosFuncionarios()).append("\n");
 
-        // Aumento de 10%
+        // 3.4 - Aumento de 10%
         funcionarioService.darAumentoDe10Porcento();
         sb.append("--- Salários Aumentados em 10% ---\n\n");
         sb.append(funcionarioService.imprimirTodosFuncionarios()).append("\n");
 
-        // Agrupar e Imprimir por fucao
+        // 3.5 e 3.6 - Agrupar e Imprimir por Funcao
         sb.append("--- Funcionários Agrupados por Função ---\n");
         sb.append(funcionarioService.imprimirFuncionariosPorFuncao()).append("\n");
 
-        // Aniversariantes
+        // 3.8 - Aniversariantes
         sb.append("--- Aniversariantes de Outubro e Dezembro ---\n");
         sb.append(funcionarioService.imprimirAniversariantesOutubroDezembro()).append("\n");
 
-        // Funcionaro mais velho
+        // 3.9 - Funcionario mais velho
         sb.append("--- Funcionário com Maior Idade ---\n");
         sb.append(funcionarioService.imprimirFuncionarioMaisVelho()).append("\n\n");
 
-        // Ordem alfabetica
+        // 3.10 - lista de funcionarios emm ordem alfabetica
         sb.append("--- Funcionários em Ordem Alfabética ---\n");
         sb.append(funcionarioService.imprimirPorOrdemAlfabetica()).append("\n");
 
-        // Total de salaarios
+        // 3.11 - Total de salarios
         sb.append("--- Total de Salários ---\n");
         sb.append(funcionarioService.imprimirTotalSalarios()).append("\n\n");
 
-        // Salarios em mínimos
-        sb.append("--- Salários em Mínimos ---\n");
+        // 3.12 - qtd de salarios minimos por funcionario
+        sb.append("--- Quantidade de salarios minimos ---\n");
         sb.append(funcionarioService.imprimirSalariosMinimos());
+
+        sb.append("</pre>");
 
         return sb.toString();
     }
+
 }

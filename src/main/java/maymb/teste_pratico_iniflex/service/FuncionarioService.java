@@ -10,22 +10,27 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
+    private final BigDecimal SALARIO_MINIMO = new BigDecimal("1212.00");
 
     public FuncionarioService(FuncionarioRepository funcionarioRepository) {
         this.funcionarioRepository = funcionarioRepository;
     }
 
-    // Metodo de formatação global para reuso
-    private String formatarFuncionario(Funcionario f) {
+
+    // Método de formatação de um único funcionário, agora público para ser acessado pelo Controller
+    public String formatarFuncionario(FuncionarioResponseDTO f) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("pt", "BR"));
         numberFormatter.setMinimumFractionDigits(2);
@@ -33,14 +38,14 @@ public class FuncionarioService {
 
         return String.format(
                 "Nome: %s, Data Nascimento: %s, Salário: %s, Função: %s",
-                f.getNome(),
-                f.getNascimento().format(dateFormatter),
-                numberFormatter.format(f.getSalario()),
-                f.getFuncao()
+                f.nome(),
+                f.dataNascimento().format(dateFormatter),
+                numberFormatter.format(f.salario()),
+                f.funcao()
         );
     }
 
-    // Metodo para inserir dados iniciais, chamado no endpoint executar-teste
+    // Método para inserir dados iniciais, chamado na inicialização
     public void inserirFuncionariosIniciais() {
         if (funcionarioRepository.count() == 0) {
             funcionarioRepository.saveAll(List.of(
@@ -58,108 +63,89 @@ public class FuncionarioService {
         }
     }
 
-    // Remover o funcionario por nome
     public void removerFuncionario(String nome) {
-        Optional<Funcionario> funcionario = funcionarioRepository.findByNome(nome);
-        funcionario.ifPresent(funcionarioRepository::delete);
+        funcionarioRepository.findByNome(nome).ifPresent(funcionarioRepository::delete);
     }
 
-    //Imprimir todos os funcionários com formatação
-    public String imprimirTodosFuncionarios() {
-        StringBuilder sb = new StringBuilder();
-        funcionarioRepository.findAll().forEach(f -> sb.append(formatarFuncionario(f)).append("\n"));
-        return sb.toString();
+    public List<FuncionarioResponseDTO> listarTodosFuncionarios() {
+        return funcionarioRepository.findAll().stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    // Aumento de 10%
-    public void darAumentoDe10Porcento() {
+    public List<FuncionarioResponseDTO> darAumentoDe10Porcento() {
         List<Funcionario> todosFuncionarios = funcionarioRepository.findAll();
         todosFuncionarios.forEach(f -> {
             BigDecimal novoSalario = f.getSalario().multiply(new BigDecimal("1.10"));
             f.setSalario(novoSalario.setScale(2, RoundingMode.HALF_UP));
         });
         funcionarioRepository.saveAll(todosFuncionarios);
+        return todosFuncionarios.stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    // Agrupar os funcionários por funcao em um MAP e imprimir
-    public String imprimirFuncionariosPorFuncao() {
-        StringBuilder sb = new StringBuilder();
-        Map<String, List<Funcionario>> funcionariosPorFuncao = funcionarioRepository.findAll().stream()
-                .collect(Collectors.groupingBy(Funcionario::getFuncao));
-
-        funcionariosPorFuncao.forEach((funcao, lista) -> {
-            sb.append("Função: ").append(funcao).append("\n");
-            lista.forEach(f -> sb.append("  - ").append(formatarFuncionario(f)).append("\n"));
-        });
-        return sb.toString();
+    public Map<String, List<FuncionarioResponseDTO>> agruparPorFuncao() {
+        List<Funcionario> todosFuncionarios = funcionarioRepository.findAll();
+        return todosFuncionarios.stream()
+                .collect(Collectors.groupingBy(Funcionario::getFuncao,
+                        Collectors.mapping(this::toResponseDTO, Collectors.toList())));
     }
 
-    //Imprimir os aniversariantes do mes 10 e 12
-    public String imprimirAniversariantesOutubroDezembro() {
-        StringBuilder sb = new StringBuilder();
-        funcionarioRepository.findAll().stream()
+    public List<FuncionarioResponseDTO> getAniversariantesOutubroDezembro() {
+        return funcionarioRepository.findAll().stream()
                 .filter(f -> f.getNascimento().getMonthValue() == 10 || f.getNascimento().getMonthValue() == 12)
-                .forEach(f -> sb.append(formatarFuncionario(f)).append("\n"));
-        return sb.toString();
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    // Imprimir o funcionário com a maior idade
-    public String imprimirFuncionarioMaisVelho() {
-        Optional<Funcionario> maisVelho = funcionarioRepository.findAll().stream()
-                .min(Comparator.comparing(Funcionario::getNascimento));
-
-        if (maisVelho.isPresent()) {
-            Funcionario f = maisVelho.get();
-            int idade = Period.between(f.getNascimento(), LocalDate.now()).getYears();
-            return String.format("Nome: %s, Idade: %d", f.getNome(), idade);
-        }
-        return "Nenhum funcionário encontrado.";
+    public Optional<FuncionarioResponseDTO> getFuncionarioMaisVelho() {
+        return funcionarioRepository.findAll().stream()
+                .min(Comparator.comparing(Funcionario::getNascimento))
+                .map(this::toResponseDTO);
     }
 
-    //Imprimir a lista de funcionários por ordem alfabética
-    public String imprimirPorOrdemAlfabetica() {
-        StringBuilder sb = new StringBuilder();
-        funcionarioRepository.findAll().stream()
+    public List<FuncionarioResponseDTO> getFuncionariosPorOrdemAlfabetica() {
+        return funcionarioRepository.findAll().stream()
                 .sorted(Comparator.comparing(Funcionario::getNome))
-                .forEach(f -> sb.append(formatarFuncionario(f)).append("\n"));
-        return sb.toString();
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    // Imprimir o total dos salários
-    public String imprimirTotalSalarios() {
-        BigDecimal total = funcionarioRepository.findAll().stream()
+    public BigDecimal getTotalSalarios() {
+        return funcionarioRepository.findAll().stream()
                 .map(Funcionario::getSalario)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        NumberFormat numberFormatter = NumberFormat.getNumberInstance(new Locale("pt", "BR"));
-        numberFormatter.setMinimumFractionDigits(2);
-        numberFormatter.setMaximumFractionDigits(2);
-        return numberFormatter.format(total);
     }
 
-    // Imprimir quantos salários mínimos ganha cada funcionário
-    public String imprimirSalariosMinimos() {
-        StringBuilder sb = new StringBuilder();
-        BigDecimal salarioMinimo = new BigDecimal("1212.00");
-        funcionarioRepository.findAll().forEach(f -> {
-            BigDecimal salariosMinimos = f.getSalario().divide(salarioMinimo, 2, RoundingMode.HALF_UP);
-            sb.append(String.format("Nome: %s, Salários Mínimos: %s\n", f.getNome(), salariosMinimos));
-        });
-        return sb.toString();
+    public Map<String, BigDecimal> getSalariosMinimosPorFuncionario() {
+        return funcionarioRepository.findAll().stream()
+                .collect(Collectors.toMap(
+                        Funcionario::getNome,
+                        f -> f.getSalario().divide(SALARIO_MINIMO, 2, RoundingMode.HALF_UP)
+                ));
     }
 
-     //METODOS REAIS DE API RESTFUL -------------------------------------
-    // Metodo para o DTO de requisição (não faz parte dos requisitos do teste, mas demonstra uma requisicao real de API RestFul)
-    public FuncionarioResponseDTO criarFuncionario(FuncionarioRequestDTO dto) {
-        Funcionario funcionario = new Funcionario(dto.nome(), dto.nascimento(), dto.salario(), dto.funcao());
-        Funcionario funcionarioSalvo = funcionarioRepository.save(funcionario);
-
+    // Método para converter Entity para DTO
+    private FuncionarioResponseDTO toResponseDTO(Funcionario funcionario) {
         return new FuncionarioResponseDTO(
-                funcionarioSalvo.getId(),
-                funcionarioSalvo.getNome(),
-                funcionarioSalvo.getNascimento(),
-                funcionarioSalvo.getSalario(),
-                funcionarioSalvo.getFuncao()
+                funcionario.getId(),
+                funcionario.getNome(),
+                funcionario.getNascimento(),
+                funcionario.getSalario(),
+                funcionario.getFuncao()
         );
+    }
+
+    // Método para converter DTO para Entity (Adicionado)
+    private Funcionario toEntity(FuncionarioRequestDTO dto) {
+        return new Funcionario(dto.nome(), dto.nascimento(), dto.salario(), dto.funcao());
+    }
+
+    // Método para criar um novo funcionário (Adicionado)
+    public FuncionarioResponseDTO criarFuncionario(FuncionarioRequestDTO requestDTO) {
+        Funcionario funcionario = toEntity(requestDTO);
+        Funcionario savedFuncionario = funcionarioRepository.save(funcionario);
+        return toResponseDTO(savedFuncionario);
     }
 }

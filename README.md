@@ -8,24 +8,218 @@
 
 ## Sobre o Projeto
 
-O **Teste Prático Iniflex** é uma aplicação Spring Boot desenvolvida como parte de um desafio técnico para gerenciar uma lista de funcionários. A aplicação utiliza o banco de dados em memória H2 para persistir os dados dos funcionários e implementa uma série de operações de negócio, como remoção de funcionários, aumento salarial, e relatórios de dados.
+O **Teste Prático Iniflex** é uma aplicação Spring Boot desenvolvida para o desafio técnico da **Viasoft**.  
+A aplicação gerencia uma lista de funcionários em um banco de dados em memória **H2**, executando diversas operações de negócio a partir de endpoints REST.
+
+O projeto segue **arquitetura em camadas** (Controller, Service, Repository), utiliza **Spring Data JPA** e está pronto para ser executado localmente.
 
 ### 🎯 Principais Funcionalidades
 
-- ✅ **API REST** com um endpoint para executar todas as operações do teste.
-- ✅ **Inicialização automática** com 10 funcionários iniciais.
-- ✅ **Persistência de dados** utilizando Spring Data JPA e H2 Database.
-- ✅ **Remoção de funcionário** por nome.
-- ✅ **Aumento de salários** de 10% para todos os funcionários.
-- ✅ **Agrupamento de funcionários** por função.
-- ✅ **Relatórios detalhados** sobre funcionários (aniversariantes, mais velho, total de salários, salários em mínimos, etc.).
-- ✅ **Arquitetura em camadas** (Controller, Service, Repository) seguindo as melhores práticas.
+- ✅ **API REST** com um endpoint que executa todas as operações do teste.
+- ✅ **Inicialização automática** com 10 funcionários pré-cadastrados.
+- ✅ **Persistência de dados** com H2 Database.
+- ✅ **Remoção** de funcionários por nome.
+- ✅ **Aumento automático** de salários em 10%.
+- ✅ **Agrupamento** de funcionários por função.
+- ✅ **Relatórios detalhados** (aniversariantes, mais velho, total de salários, salários em salários mínimos, etc.).
+- ✅ **Arquitetura organizada** seguindo boas práticas.
 
-### 🏗️ Arquitetura
+---
 
-A aplicação segue uma arquitetura em camadas simples, utilizando **Dependency Injection** para gerenciar as dependências entre os componentes.
+## 📁 Estrutura do Projeto
 
+```
+teste_pratico_iniflex/
+├── pom.xml
+├── README.md
+│
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── maymb/teste_pratico_iniflex/
+│   │   │       ├── TestePraticoIniflexApplication.java
+│   │   │       ├── controller/FuncionarioController.java
+│   │   │       ├── config/DadosIniciaisRunner.java
+│   │   │       ├── dto/
+│   │   │       │   ├── FuncionarioRequestDTO.java
+│   │   │       │   └── FuncionarioResponseDTO.java
+│   │   │       ├── entity/
+│   │   │       │   ├── Funcionario.java
+│   │   │       │   └── Pessoa.java
+│   │   │       ├── repository/FuncionarioRepository.java
+│   │   │       └── service/FuncionarioService.java
+│   │   └── resources/application.properties
+│   └── test/java/maymb/teste_pratico_iniflex/...
+└── target/
+```
 
-### 📁 Estrutura do Projeto
+---
 
-A estrutura de diretórios do projeto segue o padrão Maven e as convenções do Spring Boot.
+## 🚀 Como Executar o Projeto
+
+### Pré-requisitos
+
+Certifique-se de ter instalado:
+
+- **Java 21** ou superior
+- **Maven 3.6+**
+- **Git** (para clonar o repositório)
+
+### Clonando o Repositório
+
+```bash
+git clone https://github.com/MayaraMBastos/testePraticoIniflex
+cd teste_pratico_iniflex
+```
+
+### Opção 1: Executar com Maven
+
+```bash
+mvn spring-boot:run
+```
+
+### Opção 2: Gerar e Executar o JAR
+
+```bash
+# Gerar pacote
+mvn clean package
+
+# Executar
+java -jar target/teste_pratico_iniflex-0.0.1-SNAPSHOT.jar
+```
+
+---
+
+## 📖 Documentação da API
+
+### Endpoint de Teste Completo
+
+Executa toda a lógica de negócio do desafio em uma única requisição.
+
+- **Método:** GET
+- **URL:** `http://localhost:8080/teste/executar-teste`
+
+#### Exemplo de requisição:
+
+```bash
+curl http://localhost:8080/teste/executar-teste
+```
+
+#### Resposta (exemplo):
+```
+--- Lista de Funcionários ---
+Nome: Maria, Data Nascimento: 18/10/2000, Salário: R$ 2.009,44, Função: Operador
+...
+--- Funcionário com Maior Idade ---
+Nome: Caio, Idade: 64
+...
+```
+
+---
+
+### Endpoints da API REST (`/api/funcionarios`)
+
+#### 1. Criar Funcionário(s)
+- **Método:** POST
+- **URL:** `http://localhost:8080/api/funcionarios`
+- **Descrição:** Cria um novo funcionário.
+
+**Corpo da requisição (JSON):**
+```json
+{
+  "nome": "Fulano",
+  "nascimento": "1991-03-15",
+  "salario": 3500.00,
+  "funcao": "Analista"
+}
+```
+**Resposta:** `201 Created` + objeto criado.
+
+---
+
+#### 2. Listar Todos os Funcionários
+- **Método:** GET
+- **URL:** `http://localhost:8080/api/funcionarios`
+- **Descrição:** Lista todos os funcionários.
+
+```bash
+curl http://localhost:8080/api/funcionarios
+```
+**Resposta:** `200 OK` + array JSON.
+
+---
+
+#### 3. Remover Funcionário
+- **Método:** DELETE
+- **URL:** `http://localhost:8080/api/funcionarios/{nome}`
+- **Descrição:** Remove um funcionário pelo nome.
+
+```bash
+curl -X DELETE http://localhost:8080/api/funcionarios/João
+```
+**Resposta:** `204 No Content`.
+
+---
+
+#### 4. Dar Aumento de Salário
+- **Método:** PUT
+- **URL:** `http://localhost:8080/api/funcionarios/aumento-de-salario`
+- **Descrição:** Aumenta em 10% o salário de todos os funcionários.
+
+```bash
+curl -X PUT http://localhost:8080/api/funcionarios/aumento-de-salario
+```
+**Resposta:** `200 OK` + lista atualizada.
+
+---
+
+#### 5. Agrupar por Função
+- **Método:** GET
+- **URL:** `http://localhost:8080/api/funcionarios/por-funcao`
+- **Descrição:** Retorna funcionários agrupados por função.
+
+**Resposta:** `200 OK` + objeto JSON.
+
+---
+
+#### 6. Obter Aniversariantes
+- **Método:** GET
+- **URL:** `http://localhost:8080/api/funcionarios/aniversariantes`
+- **Descrição:** Retorna funcionários que fazem aniversário em outubro e dezembro.
+
+**Resposta:** `200 OK` + array JSON.
+
+---
+
+#### 7. Obter Funcionário Mais Velho
+- **Método:** GET
+- **URL:** `http://localhost:8080/api/funcionarios/mais-velho`
+- **Descrição:** Retorna o funcionário mais velho.
+
+**Resposta:** `200 OK` + objeto JSON.
+
+---
+
+#### 8. Obter Total de Salários
+- **Método:** GET
+- **URL:** `http://localhost:8080/api/funcionarios/total-salarios`
+- **Descrição:** Retorna a soma total dos salários.
+
+**Resposta:** `200 OK` + valor numérico.
+
+---
+
+#### 9. Obter Salários em Mínimos
+- **Método:** GET
+- **URL:** `http://localhost:8080/api/funcionarios/salarios-minimos`
+- **Descrição:** Retorna quantos salários mínimos cada funcionário recebe.
+
+**Resposta:** `200 OK` + objeto JSON.
+
+---
+
+## 🧪 Testes
+
+```bash
+mvn test
+```

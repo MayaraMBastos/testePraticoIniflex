@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import maymb.teste_pratico_iniflex.dto.FuncionarioRequestDTO;
 import maymb.teste_pratico_iniflex.dto.FuncionarioResponseDTO;
 import maymb.teste_pratico_iniflex.service.FuncionarioService;
@@ -37,7 +38,7 @@ public class FuncionarioController {
     @ApiResponse(responseCode = "201", description = "Funcionário criado com sucesso",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = FuncionarioResponseDTO.class)))
     @ApiResponse(responseCode = "400", description = "Requisição inválida (JSON malformado, dados incorretos, etc.)")
-    public ResponseEntity<FuncionarioResponseDTO> criarFuncionario(@RequestBody FuncionarioRequestDTO requestDTO) {
+    public ResponseEntity<FuncionarioResponseDTO> criarFuncionario(@RequestBody @Valid FuncionarioRequestDTO requestDTO) {
         FuncionarioResponseDTO responseDTO = funcionarioService.criarFuncionario(requestDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }

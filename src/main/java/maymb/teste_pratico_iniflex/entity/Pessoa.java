@@ -1,9 +1,11 @@
 package maymb.teste_pratico_iniflex.entity;
 
 
+import jakarta.persistence.MappedSuperclass;
+
 import java.time.LocalDate;
 
-
+@MappedSuperclass
 public class Pessoa {
 
     private String nome;

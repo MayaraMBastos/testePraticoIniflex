@@ -1,6 +1,8 @@
 package maymb.teste_pratico_iniflex.entity;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -10,20 +12,19 @@ public class Funcionario extends Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double salario;
+    private BigDecimal salario;
     private String funcao;
 
-    // Construtor vazio é obrigatório para JPA/Hibernate
     public Funcionario() {
         super();
     }
 
-    // Construtor para criar uma instância de Funcionario
-    public Funcionario(String nome, LocalDate dataNascimento, Double salario, String funcao) {
+    public Funcionario(String nome, LocalDate dataNascimento, BigDecimal salario, String funcao) {
         super(nome, dataNascimento);
         this.salario = salario;
         this.funcao = funcao;
     }
+
 
     public Long getId() {
         return id;
@@ -33,11 +34,11 @@ public class Funcionario extends Pessoa {
         this.id = id;
     }
 
-    public Double getSalario() {
+    public BigDecimal getSalario() {
         return salario;
     }
 
-    public void setSalario(Double salario) {
+    public void setSalario(BigDecimal salario) {
         this.salario = salario;
     }
 

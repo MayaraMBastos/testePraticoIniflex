@@ -1,5 +1,6 @@
 package maymb.teste_pratico_iniflex.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record FuncionarioResponseDTO(
@@ -7,6 +8,6 @@ public record FuncionarioResponseDTO(
         Long id,
         String nome,
         LocalDate dataNascimento,
-        Double salario,
+        BigDecimal salario,
         String funcao
 ) {}

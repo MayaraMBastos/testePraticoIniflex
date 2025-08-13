@@ -90,6 +90,7 @@ public class FuncionarioController {
         return ResponseEntity.ok(aniversariantes);
     }
 
+    // O correto seria criar uma DTO response especifica com os atributos nome e idade
     @GetMapping("/mais-velho")
     @Operation(summary = "Encontra o funcionário mais velho", description = "Retorna os dados do funcionário mais velho e sua idade.")
     @ApiResponse(responseCode = "200", description = "Funcionário mais velho encontrado",

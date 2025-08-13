@@ -25,6 +25,9 @@ public class Funcionario extends Pessoa {
         this.funcao = funcao;
     }
 
+    public Funcionario(long l, String maria, LocalDate of, BigDecimal bigDecimal, String operador) {
+    }
+
 
     public Long getId() {
         return id;

@@ -31,6 +31,10 @@ public class FuncionarioController {
 
     // get quantos salarios minimos
 
+    // delete por atributo nome
+
+    // put por atributo salario acrescentando 10%
+
     // Post de exemplo de uma API Restful
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

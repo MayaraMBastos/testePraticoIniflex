@@ -1,7 +1,6 @@
 package maymb.teste_pratico_iniflex.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
@@ -14,14 +13,16 @@ public class Funcionario extends Pessoa {
     private Double salario;
     private String funcao;
 
-    private Pessoa pessoa;
+    // Construtor vazio é obrigatório para JPA/Hibernate
+    public Funcionario() {
+        super();
+    }
 
-    public Funcionario(String nome, LocalDate nascimento, Long id, Double salario, String funcao, Pessoa pessoa) {
-        super(nome, nascimento);
-        this.id = id;
+    // Construtor para criar uma instância de Funcionario
+    public Funcionario(String nome, LocalDate dataNascimento, Double salario, String funcao) {
+        super(nome, dataNascimento);
         this.salario = salario;
         this.funcao = funcao;
-        this.pessoa = pessoa;
     }
 
     public Long getId() {
@@ -48,11 +49,5 @@ public class Funcionario extends Pessoa {
         this.funcao = funcao;
     }
 
-    public Pessoa getPessoa() {
-        return pessoa;
-    }
-
-    public void setPessoa(Pessoa pessoa) {
-        this.pessoa = pessoa;
-    }
+    // A herança cuida dos atributos de Pessoa, não é necessário um getPessoa/setPessoa.
 }

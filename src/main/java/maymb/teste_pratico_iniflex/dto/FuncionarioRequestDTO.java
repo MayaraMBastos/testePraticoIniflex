@@ -4,7 +4,9 @@ import java.time.LocalDate;
 
 public record FuncionarioRequestDTO(
         String nome,
-        LocalDate nascimento
+        LocalDate nascimento,
+        Double salario,
+        String funcao
 
 ) {
 }

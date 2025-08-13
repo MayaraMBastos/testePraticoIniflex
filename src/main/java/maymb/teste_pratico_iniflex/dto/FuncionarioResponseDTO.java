@@ -3,8 +3,10 @@ package maymb.teste_pratico_iniflex.dto;
 import java.time.LocalDate;
 
 public record FuncionarioResponseDTO(
+
+        Long id,
         String nome,
-        LocalDate nacimento,
+        LocalDate dataNascimento,
         Double salario,
-        String funcao) {
-}
+        String funcao
+) {}

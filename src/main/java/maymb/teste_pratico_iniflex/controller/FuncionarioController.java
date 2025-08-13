@@ -31,21 +31,22 @@ public class FuncionarioController {
 
     // get quantos salarios minimos
 
+    // Post de exemplo de uma API Restful
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Retorna o status 201 (Created)
+    @ResponseStatus(HttpStatus.CREATED)
     public FuncionarioResponseDTO criarFuncionario(@RequestBody FuncionarioRequestDTO requestDTO) {
         return funcionarioService.criarFuncionario(requestDTO);
     }
 
-    // Endpoint principal que executa todas as ações do teste
+    // Endpoint principal que executa todas as acoes do teste
     @GetMapping("/executar-teste")
     public String executarTesteCompleto() {
         StringBuilder sb = new StringBuilder();
 
-        // Inserir todos os funcionários
+        // Inserir todos os funcionarios
         funcionarioService.inserirFuncionariosIniciais();
 
-        // Remover funcionário "João"
+        // Remover funcionário Joao
         funcionarioService.removerFuncionario("João");
         sb.append("--- Funcionário 'João' Removido ---\n\n");
 
@@ -58,7 +59,7 @@ public class FuncionarioController {
         sb.append("--- Salários Aumentados em 10% ---\n\n");
         sb.append(funcionarioService.imprimirTodosFuncionarios()).append("\n");
 
-        // Agrupar e Imprimir por Função
+        // Agrupar e Imprimir por fucao
         sb.append("--- Funcionários Agrupados por Função ---\n");
         sb.append(funcionarioService.imprimirFuncionariosPorFuncao()).append("\n");
 
@@ -66,19 +67,19 @@ public class FuncionarioController {
         sb.append("--- Aniversariantes de Outubro e Dezembro ---\n");
         sb.append(funcionarioService.imprimirAniversariantesOutubroDezembro()).append("\n");
 
-        // Funcionário mais velho
+        // Funcionaro mais velho
         sb.append("--- Funcionário com Maior Idade ---\n");
         sb.append(funcionarioService.imprimirFuncionarioMaisVelho()).append("\n\n");
 
-        // Ordem alfabética
+        // Ordem alfabetica
         sb.append("--- Funcionários em Ordem Alfabética ---\n");
         sb.append(funcionarioService.imprimirPorOrdemAlfabetica()).append("\n");
 
-        // Total de salários
+        // Total de salaarios
         sb.append("--- Total de Salários ---\n");
         sb.append(funcionarioService.imprimirTotalSalarios()).append("\n\n");
 
-        // Salários em mínimos
+        // Salarios em mínimos
         sb.append("--- Salários em Mínimos ---\n");
         sb.append(funcionarioService.imprimirSalariosMinimos());
 
